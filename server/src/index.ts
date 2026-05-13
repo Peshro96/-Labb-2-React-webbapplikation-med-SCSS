@@ -42,6 +42,20 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
+// Hjälpfunktion för att validera titel
+// Returnerar felmeddelande om något är fel, annars null
+function validateTitle(title: unknown): string | null {
+  if (typeof title !== "string") {
+    return "title måste vara en text";
+  }
+
+  if (title.trim() === "") {
+    return "title får inte vara tom";
+  }
+
+  return null;
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -89,8 +103,9 @@ app.get("/api/recipes/:id", (req: Request, res: Response) => {
 app.post("/api/recipes", upload.single("image"), (req: Request, res: Response) => {
   const { title, description, ingredients } = req.body;
 
-  if (!title) {
-    return res.status(400).json({ message: "title krävs" });
+  const titleError = validateTitle(title);
+  if (titleError) {
+    return res.status(400).json({ message: titleError });
   }
 
   // Bygg URL till bilden om en bild laddats upp
@@ -123,8 +138,15 @@ app.put(
 
     const { title, description, ingredients } = req.body;
 
-    // Uppdatera bara de fält som faktiskt skickats med
-    if (title !== undefined) recipe.title = title;
+    // Validera titel bara om den faktiskt skickats med
+    if (title !== undefined) {
+      const titleError = validateTitle(title);
+      if (titleError) {
+        return res.status(400).json({ message: titleError });
+      }
+      recipe.title = title;
+    }
+
     if (description !== undefined) recipe.description = description;
     if (ingredients !== undefined) recipe.ingredients = ingredients;
 
@@ -148,13 +170,23 @@ app.delete("/api/recipes/:id", (req: Request, res: Response) => {
     const filename = path.basename(recipe.imageUrl);
     const filePath = path.join(uploadsDir, filename);
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    } catch (err) {
+      // Loggar men kraschar inte, viktigast att receptet tas bort
+      console.error("Kunde inte ta bort bildfil:", err);
     }
   }
 
   recipes.splice(index, 1);
   res.json({ message: "Recept borttaget" });
+});
+
+// 404-fallback för routes som inte finns
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ message: "Endpoint finns inte" });
 });
 
 app.listen(PORT, () => {
