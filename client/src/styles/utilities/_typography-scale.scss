@@ -1,0 +1,6 @@
+// Genererar text-storlek-klasser .text-1 till .text-5
+@for $i from 1 through 5 {
+  .text-#{$i} {
+    font-size: 12px + ($i * 2px);
+  }
+}

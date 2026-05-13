@@ -1,0 +1,30 @@
+@use "../abstracts/functions" as *;
+
+// Bas-stil som flera meddelandetyper ärver
+%message-base {
+  padding: space(sm) space(md);
+  border-radius: 6px;
+  font-size: font-size(base);
+}
+
+// Använder @extend för att ärva från placeholderen
+.message-success {
+  @extend %message-base;
+  background-color: color(success);
+  color: white;
+}
+
+.message-danger {
+  @extend %message-base;
+  background-color: color(danger);
+  color: white;
+}
+
+// Generella hjälp-klasser
+.text-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}

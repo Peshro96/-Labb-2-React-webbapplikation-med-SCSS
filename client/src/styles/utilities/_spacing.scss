@@ -1,0 +1,20 @@
+@use "../abstracts/variables" as *;
+
+// Loopar genom spacing-mappen och skapar margin- och padding-klasser
+@each $name, $value in $spacing-scale {
+  .m-#{$name} {
+    margin: $value;
+  }
+
+  .p-#{$name} {
+    padding: $value;
+  }
+
+  .mt-#{$name} {
+    margin-top: $value;
+  }
+
+  .mb-#{$name} {
+    margin-bottom: $value;
+  }
+}
