@@ -1,0 +1,44 @@
+@use "sass:map";
+@use "sass:color";
+@use "variables" as *;
+@use "functions" as *;
+
+// Media query för en specifik brytpunkt
+// Användning: @include respond(md) { ... }
+@mixin respond($breakpoint) {
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+// Centrerar innehållet med flex
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Bas-stil för knappar, tar bakgrundsfärg och textfärg som argument
+@mixin button-style($bg, $text-color: white) {
+  background-color: $bg;
+  color: $text-color;
+  padding: space(sm) space(md);
+  border: none;
+  border-radius: 6px;
+  font-size: font-size(base);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: color.adjust($bg, $lightness: -8%);
+  }
+}
+
+// Bas-stil för recept-kort och liknande
+@mixin card-style {
+  background-color: color(surface);
+  border: 1px solid color(border);
+  border-radius: 8px;
+  padding: space(md);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
