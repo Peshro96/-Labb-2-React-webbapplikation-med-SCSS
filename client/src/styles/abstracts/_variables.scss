@@ -1,0 +1,40 @@
+// Färgskala för hela appen
+$colors: (
+  primary: #c2410c,
+  primary-dark: #9a3412,
+  secondary: #fde68a,
+  background: #fff7ed,
+  surface: #ffffff,
+  text: #1c1917,
+  text-muted: #78716c,
+  border: #e7e5e4,
+  success: #16a34a,
+  danger: #dc2626
+);
+
+// Spacing-skala, används i marginaler och paddingar
+$spacing-scale: (
+  xs: 4px,
+  sm: 8px,
+  md: 16px,
+  lg: 24px,
+  xl: 32px,
+  xxl: 48px
+);
+
+// Font-sizes
+$font-sizes: (
+  sm: 0.875rem,
+  base: 1rem,
+  lg: 1.25rem,
+  xl: 1.5rem,
+  xxl: 2rem
+);
+
+// Brytpunkter för responsiv design
+$breakpoints: (
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px
+);

@@ -1,0 +1,17 @@
+@use "sass:map";
+@use "variables" as *;
+
+// Hämtar en färg ur färgmappen
+@function color($name) {
+  @return map.get($colors, $name);
+}
+
+// Hämtar ett spacing-värde ur spacing-mappen
+@function space($size) {
+  @return map.get($spacing-scale, $size);
+}
+
+// Hämtar en font-size ur font-mappen
+@function font-size($size) {
+  @return map.get($font-sizes, $size);
+}
