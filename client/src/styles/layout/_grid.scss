@@ -1,0 +1,17 @@
+@use "../abstracts/functions" as *;
+@use "../abstracts/mixins" as *;
+
+// Generell grid-layout för recept-listor
+.recipe-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: space(md);
+
+  @include respond(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

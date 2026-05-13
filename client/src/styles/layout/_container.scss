@@ -1,0 +1,14 @@
+@use "../abstracts/functions" as *;
+@use "../abstracts/mixins" as *;
+
+// Wrapper som centrerar innehållet och har max-bredd
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 space(md);
+
+  @include respond(md) {
+    padding: 0 space(lg);
+  }
+}
