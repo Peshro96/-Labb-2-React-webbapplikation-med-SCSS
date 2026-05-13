@@ -16,6 +16,13 @@ type Recipe = {
   imageUrl: string;
 };
 
+// Typ för uppdatering, alla fält valfria
+type UpdateRecipeBody = {
+  title?: string;
+  description?: string;
+  ingredients?: string;
+};
+
 // Tillfällig "databas" i minnet
 let recipes: Recipe[] = [
   {
@@ -101,6 +108,53 @@ app.post("/api/recipes", upload.single("image"), (req: Request, res: Response) =
 
   recipes.push(newRecipe);
   res.status(201).json(newRecipe);
+});
+
+// Uppdatera ett befintligt recept
+app.put(
+  "/api/recipes/:id",
+  (req: Request<{ id: string }, {}, UpdateRecipeBody>, res: Response) => {
+    const id = Number(req.params.id);
+    const recipe = recipes.find((r) => r.id === id);
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recept hittades inte" });
+    }
+
+    const { title, description, ingredients } = req.body;
+
+    // Uppdatera bara de fält som faktiskt skickats med
+    if (title !== undefined) recipe.title = title;
+    if (description !== undefined) recipe.description = description;
+    if (ingredients !== undefined) recipe.ingredients = ingredients;
+
+    res.json(recipe);
+  }
+);
+
+// Ta bort ett recept och dess bildfil
+app.delete("/api/recipes/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const index = recipes.findIndex((r) => r.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: "Recept hittades inte" });
+  }
+
+  const recipe = recipes[index];
+
+  // Försök ta bort bildfilen från disk om en sådan finns
+  if (recipe.imageUrl) {
+    const filename = path.basename(recipe.imageUrl);
+    const filePath = path.join(uploadsDir, filename);
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+
+  recipes.splice(index, 1);
+  res.json({ message: "Recept borttaget" });
 });
 
 app.listen(PORT, () => {
