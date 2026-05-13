@@ -30,9 +30,26 @@ let currentId = 2;
 app.use(cors());
 app.use(express.json());
 
-// Test-route så vi kan se att servern är igång
+// Test-route, bra att ha för att se att servern är igång
 app.get("/", (_req: Request, res: Response) => {
   res.send("Server körs");
+});
+
+// Hämta alla recept
+app.get("/api/recipes", (_req: Request, res: Response) => {
+  res.json(recipes);
+});
+
+// Hämta ett specifikt recept via id
+app.get("/api/recipes/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const recipe = recipes.find((r) => r.id === id);
+
+  if (!recipe) {
+    return res.status(404).json({ message: "Recept hittades inte" });
+  }
+
+  res.json(recipe);
 });
 
 app.listen(PORT, () => {
