@@ -1,0 +1,26 @@
+@use "../abstracts/functions" as *;
+@use "../abstracts/mixins" as *;
+
+// Stil för 404-sidan
+.not-found {
+  text-align: center;
+  padding: space(xxl) space(md);
+
+  &__code {
+    font-size: 5rem;
+    color: color(primary);
+    margin-bottom: space(sm);
+  }
+
+  &__text {
+    font-size: font-size(lg);
+    color: color(text-muted);
+    margin-bottom: space(lg);
+  }
+
+  &__link {
+    @include button-style(color(primary));
+    display: inline-block;
+    font-weight: 600;
+  }
+}
