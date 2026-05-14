@@ -1,8 +1,18 @@
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Recipes from "./pages/Recipes";
+import RecipeDetails from "./pages/RecipeDetails";
+import AddRecipe from "./pages/AddRecipe";
+import NotFound from "./pages/NotFound";
+
 export default function App() {
-  // Tillfälligt skelett, byggs ut med routing senare
   return (
-    <div>
-      <h1>Receptsamling</h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/recipes" element={<Recipes />} />
+      <Route path="/recipes/:id" element={<RecipeDetails />} />
+      <Route path="/add" element={<AddRecipe />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
