@@ -1,0 +1,44 @@
+@use "../abstracts/functions" as *;
+@use "../abstracts/mixins" as *;
+
+// Navigeringsmenyn längst upp på sidan
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: space(md) space(lg);
+  background-color: color(surface);
+  border-bottom: 1px solid color(border);
+  margin-bottom: space(lg);
+
+  // Logo/varumärket till vänster
+  &__brand {
+    font-size: font-size(lg);
+    font-weight: 700;
+    color: color(primary);
+  }
+
+  // Länk-listan till höger
+  &__links {
+    display: flex;
+    gap: space(md);
+    list-style: none;
+
+    a {
+      padding: space(xs) space(sm);
+      color: color(text);
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: color(secondary);
+      }
+
+      // Klassen react-router lägger på automatiskt på aktiv länk
+      &.active {
+        color: color(primary);
+        font-weight: 600;
+      }
+    }
+  }
+}
