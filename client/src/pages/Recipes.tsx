@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRecipes } from "../api/recipesApi";
+import RecipeCard from "../components/RecipeCard";
 import type { Recipe } from "../types/recipe";
 
 // Listsidan, hämtar och visar alla recept från servern
@@ -24,13 +25,11 @@ export default function Recipes() {
     <div>
       <h1>Recept</h1>
 
-      <ul>
+      <div className="recipe-grid">
         {recipes.map((recipe) => (
-          <li key={recipe.id}>
-            {recipe.title} - {recipe.description}
-          </li>
+          <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
