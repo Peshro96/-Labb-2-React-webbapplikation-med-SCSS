@@ -9,3 +9,9 @@ export async function getRecipes(): Promise<Recipe[]> {
   const response = await axios.get<Recipe[]>(API_URL);
   return response.data;
 }
+
+// Hämtar ett specifikt recept via id
+export async function getRecipeById(id: number): Promise<Recipe> {
+  const response = await axios.get<Recipe>(`${API_URL}/${id}`);
+  return response.data;
+}
