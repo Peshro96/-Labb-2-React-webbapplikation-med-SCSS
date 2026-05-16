@@ -15,3 +15,8 @@ export async function getRecipeById(id: number): Promise<Recipe> {
   const response = await axios.get<Recipe>(`${API_URL}/${id}`);
   return response.data;
 }
+
+// Tar bort ett recept via id
+export async function deleteRecipe(id: number): Promise<void> {
+  await axios.delete(`${API_URL}/${id}`);
+}

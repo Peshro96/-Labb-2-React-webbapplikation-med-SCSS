@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getRecipeById } from "../api/recipesApi";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { getRecipeById, deleteRecipe } from "../api/recipesApi";
 import type { Recipe } from "../types/recipe";
 
 // Detaljvy för ett enskilt recept, läser id från URL:en
 export default function RecipeDetails() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -28,6 +30,25 @@ export default function RecipeDetails() {
 
     fetchRecipe();
   }, [id]);
+
+  // Ta bort receptet efter att användaren bekräftat
+  async function handleDelete() {
+    if (!recipe) return;
+
+    const confirmed = window.confirm(
+      `Är du säker på att du vill ta bort "${recipe.title}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteRecipe(recipe.id);
+      navigate("/recipes");
+    } catch (err) {
+      console.error("Kunde inte ta bort recept:", err);
+      setError("Kunde inte ta bort receptet.");
+    }
+  }
 
   if (loading) {
     return <p>Laddar recept...</p>;
@@ -59,9 +80,19 @@ export default function RecipeDetails() {
       <h2 className="recipe-details__subtitle">Ingredienser</h2>
       <p className="recipe-details__ingredients">{recipe.ingredients}</p>
 
-      <Link to="/recipes" className="recipe-details__back">
-        Tillbaka till alla recept
-      </Link>
+      <div className="recipe-details__actions">
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="recipe-details__delete"
+        >
+          Ta bort recept
+        </button>
+
+        <Link to="/recipes" className="recipe-details__back">
+          Tillbaka till alla recept
+        </Link>
+      </div>
     </article>
   );
 }
