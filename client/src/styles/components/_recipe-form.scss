@@ -1,0 +1,60 @@
+@use "../abstracts/functions" as *;
+@use "../abstracts/mixins" as *;
+
+// Formulär för att skapa nytt recept
+.recipe-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: space(md);
+
+  // Ett fält består av label + input/textarea
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: space(xs);
+
+    label {
+      font-weight: 600;
+      color: color(text);
+    }
+
+    input[type="text"],
+    textarea {
+      padding: space(sm);
+      border: 1px solid color(border);
+      border-radius: 6px;
+      font-size: font-size(base);
+      font-family: inherit;
+
+      &:focus {
+        outline: 2px solid color(primary);
+        border-color: color(primary);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      font-size: font-size(base);
+    }
+  }
+
+  // Förhandsvisning av vald bild innan submit
+  &__preview {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  // Submit-knappen längst ner
+  &__submit {
+    @include button-style(color(primary));
+    align-self: flex-start;
+    font-weight: 600;
+  }
+}
