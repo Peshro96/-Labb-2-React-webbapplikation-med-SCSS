@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { ChangeEvent, FormEvent } from "react";
+import { createRecipe } from "../api/recipesApi";
 
 // State för formulärets text-inputs
 type FormData = {
@@ -10,6 +12,8 @@ type FormData = {
 
 // Formulär för att skapa ett nytt recept
 export default function RecipeForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -19,6 +23,9 @@ export default function RecipeForm() {
   // Separat state för bildfilen och preview-URL:en
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
+
+  // State för felmeddelanden vid submit
+  const [error, setError] = useState<string>("");
 
   // Uppdaterar rätt textfält när användaren skriver
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -41,10 +48,25 @@ export default function RecipeForm() {
     }
   }
 
-  // Hanterar submit, ingen API-logik än
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  // Skickar formuläret till servern och navigerar tillbaka vid success
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Submit:", { ...formData, image });
+    setError("");
+
+    try {
+      await createRecipe({
+        title: formData.title,
+        description: formData.description,
+        ingredients: formData.ingredients,
+        image: image
+      });
+
+      // Receptet sparades, gå tillbaka till listsidan
+      navigate("/recipes");
+    } catch (err) {
+      console.error("Kunde inte spara recept:", err);
+      setError("Kunde inte spara receptet. Försök igen.");
+    }
   }
 
   return (
@@ -100,6 +122,9 @@ export default function RecipeForm() {
           className="recipe-form__preview"
         />
       )}
+
+      {/* Visa felmeddelande om submit misslyckats */}
+      {error && <p className="message-danger">{error}</p>}
 
       <button type="submit" className="recipe-form__submit">
         Spara recept
