@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
-// State för formulärets inputs
+// State för formulärets text-inputs
 type FormData = {
   title: string;
   description: string;
@@ -16,7 +16,11 @@ export default function RecipeForm() {
     ingredients: ""
   });
 
-  // Uppdaterar rätt fält när användaren skriver
+  // Separat state för bildfilen och preview-URL:en
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+
+  // Uppdaterar rätt textfält när användaren skriver
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
 
@@ -26,10 +30,21 @@ export default function RecipeForm() {
     }));
   }
 
-  // Hanterar submit, ingen logik än
+  // Hanterar när en bild väljs, skapar preview-URL
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      setImage(file);
+      // createObjectURL skapar en tillfällig URL till bilden i minnet
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  }
+
+  // Hanterar submit, ingen API-logik än
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Submit:", formData);
+    console.log("Submit:", { ...formData, image });
   }
 
   return (
@@ -66,6 +81,25 @@ export default function RecipeForm() {
           rows={4}
         />
       </div>
+
+      <div className="recipe-form__field">
+        <label htmlFor="image">Bild</label>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </div>
+
+      {/* Visa preview om en bild valts */}
+      {previewUrl && (
+        <img
+          src={previewUrl}
+          alt="Förhandsvisning"
+          className="recipe-form__preview"
+        />
+      )}
 
       <button type="submit" className="recipe-form__submit">
         Spara recept
