@@ -53,6 +53,12 @@ export default function RecipeForm() {
     e.preventDefault();
     setError("");
 
+    // Enkel validering på klienten innan vi skickar till servern
+    if (formData.title.trim() === "") {
+      setError("Titel måste fyllas i.");
+      return;
+    }
+
     try {
       await createRecipe({
         title: formData.title,
@@ -123,7 +129,7 @@ export default function RecipeForm() {
         />
       )}
 
-      {/* Visa felmeddelande om submit misslyckats */}
+      {/* Visa felmeddelande om submit misslyckats eller om validering failar */}
       {error && <p className="message-danger">{error}</p>}
 
       <button type="submit" className="recipe-form__submit">
